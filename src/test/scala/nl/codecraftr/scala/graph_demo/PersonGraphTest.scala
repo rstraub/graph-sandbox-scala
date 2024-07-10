@@ -21,9 +21,11 @@ class PersonGraphTest extends AnyFlatSpec with Matchers with AppendedClues {
     println("--incoming--")
     graph.get(p).incoming.foreach(println)
 
+    println(s"connected to $p : ${graph.get(p).degree}")
+
+    graph.isMixed shouldBe false withClue "graph is undirectional"
+    graph.isCyclic shouldBe true withClue "graph is cyclic"
     graph.isConnected shouldBe true withClue "nodes are not connected"
     graph.isComplete shouldBe true withClue "graph is incomplete"
   }
-
-  "dot" should "visualize a graph" in {}
 }
