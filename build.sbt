@@ -1,4 +1,4 @@
-import Dependencies.*
+import Dependencies.scalaTest
 import org.typelevel.scalacoptions.ScalacOptions
 import sbt.Keys.libraryDependencies
 
@@ -9,42 +9,18 @@ ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 ThisBuild / javacOptions ++= Seq("-source", "21", "-target", "21")
 tpolecatScalacOptions += ScalacOptions.release("21")
+tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
 
 lazy val commonSettings =
   libraryDependencies += scalaTest
 
-lazy val root = project
+lazy val graph = project
   .enablePlugins(ScalafmtPlugin)
-  .aggregate(meta, codewars, exercism, katalog)
   .in(file("."))
   .settings(
-    name := "scala3-katabase",
-    version := "0.1.0-SNAPSHOT"
+    name := "scala-graph",
+    version := "0.1.0-SNAPSHOT",
+    commonSettings,
+    libraryDependencies += "org.scala-graph" % "graph-core_2.13" % "2.0.1",
+    libraryDependencies += "org.scala-graph" % "graph-dot_2.13" % "2.0.0"
   )
-
-lazy val meta = project
-  .settings(
-    commonSettings
-  )
-
-lazy val codewars = project
-  .dependsOn(meta)
-  .settings(commonSettings)
-
-lazy val exercism =
-  project
-    .dependsOn(meta)
-    .settings(commonSettings)
-
-lazy val katalog =
-  project
-    .dependsOn(meta)
-    .settings(commonSettings)
-
-lazy val inspect =
-  project
-    .dependsOn(meta, codewars, exercism)
-    .settings(
-      commonSettings,
-      libraryDependencies += "org.reflections" % "reflections" % "0.10.2"
-    )
