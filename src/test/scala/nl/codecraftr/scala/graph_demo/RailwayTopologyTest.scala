@@ -36,7 +36,8 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
     edge6
   )
 
-  private val topology = Topology(nodes, edges)
+  // Interestingly, parts of the graph seem stateful... Path finding encounters problems
+  private def topology = Topology(nodes, edges)
 
   /*
                  100      200      100
@@ -72,10 +73,15 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
     topology.neighbors(node1) shouldBe Set(node2)
   }
 
-  "paths" should "return possible paths connecting two nodes" ignore {
-//    topology.paths(node2, node5) shouldBe Set(
-//      List(node2, node5),
-//      List(node2, node3, node4, node5)
-//    )
+  "pathValid" should "return true given a valid path" in {
+    topology.validPath(node1, node2, node3) shouldBe true
+  }
+
+  it should "return false given invalid path" in {
+    topology.validPath(node1, node3) shouldBe false
+  }
+
+  it should "return false given path in wrong order" in {
+    topology.validPath(node1, node3, node2) shouldBe false
   }
 }

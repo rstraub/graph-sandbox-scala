@@ -6,11 +6,12 @@ import scalax.collection.immutable.Graph
   */
 case class Topology(nodes: Set[TrackNode], edges: Set[TrackEdge]) {
   private val graph: Graph[TrackNode, TrackEdge] = Graph.from(nodes, edges)
+  private type ConnectedNode = Topology.this.graph.NodeT
 
   def switches: Set[TrackNode] =
     graph.nodes
       .filter(_.degree >= 3)
-      .map(nt => TrackNode(nt.id, nt.name))
+      .map(parseNode)
       .toSet
 
   def neighbors(ofNode: TrackNode): Set[TrackNode] =
@@ -18,5 +19,15 @@ case class Topology(nodes: Set[TrackNode], edges: Set[TrackEdge]) {
       .find(ofNode)
       .map(_.neighbors)
       .getOrElse(Set.empty)
-      .map(nt => TrackNode(nt.id, nt.name))
+      .map(parseNode)
+
+    def validPath(nodes: TrackNode*): Boolean =
+      connectedNode(nodes.head) pathTo connectedNode(nodes.last) match {
+        case Some(path) => path.nodes.map(parseNode).toList == nodes.toList
+        case None       => false
+      }
+
+  private def connectedNode(node: TrackNode): ConnectedNode = graph.get(node)
+
+  private def parseNode(n: ConnectedNode) = TrackNode(n.id, n.name)
 }
