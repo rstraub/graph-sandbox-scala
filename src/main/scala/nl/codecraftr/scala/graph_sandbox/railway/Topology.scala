@@ -37,6 +37,13 @@ object Topology {
       nodes: Set[TrackNode],
       disconnectedEdges: Set[TrackEdgeDto]
   ): Topology = {
-    ???
+    val connectedEdges = disconnectedEdges.flatMap { e =>
+      for {
+        from <- nodes.find(_.id == e.from)
+        to <- nodes.find(_.id == e.to)
+      } yield TrackEdge(from, to, e.length)
+    }
+
+    Topology(nodes, connectedEdges)
   }
 }
