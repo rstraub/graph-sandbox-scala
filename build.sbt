@@ -14,11 +14,11 @@ tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement
 lazy val commonSettings =
   libraryDependencies += scalaTest
 
-lazy val graph = project
+lazy val root = project
   .enablePlugins(ScalafmtPlugin)
   .in(file("."))
   .settings(
-    name := "scala-graph",
+    name := "graph-sandbox-scala",
     version := "0.1.0-SNAPSHOT",
     commonSettings,
     libraryDependencies += "org.scala-graph" %% "graph-core" % "2.0.1",
