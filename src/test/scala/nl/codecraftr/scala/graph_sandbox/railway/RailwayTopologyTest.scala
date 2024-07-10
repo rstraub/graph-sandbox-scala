@@ -1,5 +1,6 @@
-package nl.codecraftr.scala.graph_demo
+package nl.codecraftr.scala.graph_sandbox.railway
 
+import nl.codecraftr.scala.graph_sandbox.{Topology, TrackEdge, TrackNode}
 import org.scalatest.AppendedClues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

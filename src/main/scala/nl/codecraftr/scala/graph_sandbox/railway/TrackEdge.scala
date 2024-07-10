@@ -1,4 +1,4 @@
-package nl.codecraftr.scala.graph_demo
+package nl.codecraftr.scala.graph_sandbox
 
 import scalax.collection.generic.AbstractUnDiEdge
 

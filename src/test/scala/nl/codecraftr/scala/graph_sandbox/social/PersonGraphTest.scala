@@ -1,5 +1,6 @@
-package nl.codecraftr.scala.graph_demo
+package nl.codecraftr.scala.graph_sandbox.social
 
+import nl.codecraftr.scala.graph_sandbox.Person
 import org.scalatest.AppendedClues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
