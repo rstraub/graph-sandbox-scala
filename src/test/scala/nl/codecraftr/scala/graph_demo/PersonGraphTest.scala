@@ -3,7 +3,7 @@ package nl.codecraftr.scala.graph_demo
 import org.scalatest.AppendedClues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import scalax.collection.OuterImplicits.*
+import scalax.collection.OuterImplicits._
 import scalax.collection.edges.{UnDiEdge, UnDiEdgeImplicits}
 import scalax.collection.immutable.Graph
 
