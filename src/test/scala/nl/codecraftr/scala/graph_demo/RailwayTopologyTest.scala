@@ -36,6 +36,8 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
     edge6
   )
 
+  private val topology = Topology(nodes, edges)
+
   /*
                  100      200      100
              (1) --- (2) ---- (5) --- (6)
@@ -59,8 +61,21 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
   }
 
   "switches" should "return all nodes connecting three or more nodes" in {
-    Topology(nodes, edges).switches shouldBe Set(node2, node5)
+    topology.switches shouldBe Set(node2, node5)
   }
 
-  "paths" should "return possible paths connecting two nodes" in {}
+  "neighbours" should "return all nodes connected to the given node" in {
+    topology.neighbors(node2) shouldBe Set(node1, node3, node5)
+  }
+
+  it should "return all nodes given an outer node" in {
+    topology.neighbors(node1) shouldBe Set(node2)
+  }
+
+  "paths" should "return possible paths connecting two nodes" ignore {
+//    topology.paths(node2, node5) shouldBe Set(
+//      List(node2, node5),
+//      List(node2, node3, node4, node5)
+//    )
+  }
 }

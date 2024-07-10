@@ -12,4 +12,11 @@ case class Topology(nodes: Set[TrackNode], edges: Set[TrackEdge]) {
       .filter(_.degree >= 3)
       .map(nt => TrackNode(nt.id, nt.name))
       .toSet
+
+  def neighbors(ofNode: TrackNode): Set[TrackNode] =
+    graph.nodes
+      .find(ofNode)
+      .map(_.neighbors)
+      .getOrElse(Set.empty)
+      .map(nt => TrackNode(nt.id, nt.name))
 }
