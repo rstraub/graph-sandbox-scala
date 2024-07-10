@@ -1,4 +1,4 @@
-package nl.codecraftr.scala.graph_sandbox
+package nl.codecraftr.scala.graph_sandbox.railway
 
 import scalax.collection.immutable.Graph
 
@@ -22,7 +22,7 @@ case class Topology(nodes: Set[TrackNode], edges: Set[TrackEdge]) {
       .map(parseNode)
 
     def validPath(nodes: TrackNode*): Boolean =
-      connectedNode(nodes.head) pathTo connectedNode(nodes.last) match {
+      connectedNode(nodes.head) shortestPathTo connectedNode(nodes.last) match {
         case Some(path) => path.nodes.map(parseNode).toList == nodes.toList
         case None       => false
       }
@@ -30,4 +30,13 @@ case class Topology(nodes: Set[TrackNode], edges: Set[TrackEdge]) {
   private def connectedNode(node: TrackNode): ConnectedNode = graph.get(node)
 
   private def parseNode(n: ConnectedNode) = TrackNode(n.id, n.name)
+}
+
+object Topology {
+  def of(
+      nodes: Set[TrackNode],
+      disconnectedEdges: Set[TrackEdgeDto]
+  ): Topology = {
+    ???
+  }
 }

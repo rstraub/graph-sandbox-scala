@@ -1,6 +1,5 @@
 package nl.codecraftr.scala.graph_sandbox.railway
 
-import nl.codecraftr.scala.graph_sandbox.{Topology, TrackEdge, TrackNode}
 import org.scalatest.AppendedClues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -37,8 +36,7 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
     edge6
   )
 
-  // Interestingly, parts of the graph seem stateful... Path finding encounters problems
-  private def topology = Topology(nodes, edges)
+  private val topology = Topology(nodes, edges)
 
   /*
                  100      200      100
@@ -84,5 +82,15 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
 
   it should "return false given path in wrong order" in {
     topology.validPath(node1, node3, node2) shouldBe false
+  }
+
+  "disconnected topology" should "be converted into a connected one" in {
+    val disconnectedEdges = Set(
+      TrackEdgeDto("1", "2", 100),
+      TrackEdgeDto("2", "3", 100)
+    )
+
+    Topology.of(Set(node1, node2, node3), disconnectedEdges) shouldBe
+      Topology(Set(node1, node2, node3), Set(edge1, edge4))
   }
 }

@@ -1,4 +1,4 @@
-package nl.codecraftr.scala.graph_sandbox
+package nl.codecraftr.scala.graph_sandbox.social
 
 import scalax.collection.generic.{AbstractDiEdge, AnyEdge}
 
