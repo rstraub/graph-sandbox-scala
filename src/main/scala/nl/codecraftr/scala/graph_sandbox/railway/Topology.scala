@@ -30,6 +30,10 @@ case class Topology(nodes: Set[TrackNode], edges: Set[TrackEdge]) {
   private def connectedNode(node: TrackNode): ConnectedNode = graph.get(node)
 
   private def parseNode(n: ConnectedNode) = TrackNode(n.id, n.name)
+
+  def join(topologyB: Topology): Option[Topology] =
+    if (graph.intersect(topologyB.graph).isEmpty) None
+    else Some(Topology(nodes ++ topologyB.nodes, edges ++ topologyB.edges))
 }
 
 object Topology {

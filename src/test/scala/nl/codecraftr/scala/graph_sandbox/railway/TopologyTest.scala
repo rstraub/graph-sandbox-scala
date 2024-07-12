@@ -1,11 +1,15 @@
 package nl.codecraftr.scala.graph_sandbox.railway
 
-import org.scalatest.AppendedClues
+import org.scalatest.{AppendedClues, OptionValues}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scalax.collection.immutable.Graph
 
-class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
+class TopologyTest
+    extends AnyFlatSpec
+    with Matchers
+    with AppendedClues
+    with OptionValues {
   private val node1 = TrackNode("1", "28W")
   private val node2 = TrackNode("2", "29W")
   private val node3 = TrackNode("3", "12Z")
@@ -36,15 +40,15 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
     edge6
   )
 
-  private val topology = Topology(nodes, edges)
-
   /*
-                 100      200      100
-             (1) --- (2) ---- (5) --- (6)
-                    50 \      / 50
-                       (3)--(4)
-                         100
+               100      200      100
+           (1) --- (2) ---- (5) --- (6)
+                  50 \      / 50
+                     (3)--(4)
+                       100
    */
+  private val aTopology = Topology(nodes, edges)
+
   private val graph: Graph[TrackNode, TrackEdge] =
     Graph.from(
       nodes,
@@ -61,27 +65,27 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
   }
 
   "switches" should "return all nodes connecting three or more nodes" in {
-    topology.switches shouldBe Set(node2, node5)
+    aTopology.switches shouldBe Set(node2, node5)
   }
 
   "neighbours" should "return all nodes connected to the given node" in {
-    topology.neighbors(node2) shouldBe Set(node1, node3, node5)
+    aTopology.neighbors(node2) shouldBe Set(node1, node3, node5)
   }
 
   it should "return all nodes given an outer node" in {
-    topology.neighbors(node1) shouldBe Set(node2)
+    aTopology.neighbors(node1) shouldBe Set(node2)
   }
 
   "pathValid" should "return true given a valid path" in {
-    topology.validPath(node1, node2, node3) shouldBe true
+    aTopology.validPath(node1, node2, node3) shouldBe true
   }
 
   it should "return false given invalid path" in {
-    topology.validPath(node1, node3) shouldBe false
+    aTopology.validPath(node1, node3) shouldBe false
   }
 
   it should "return false given path in wrong order" in {
-    topology.validPath(node1, node3, node2) shouldBe false
+    aTopology.validPath(node1, node3, node2) shouldBe false
   }
 
   "disconnected topology" should "be converted into a connected one" in {
@@ -92,5 +96,44 @@ class RailwayTopologyTest extends AnyFlatSpec with Matchers with AppendedClues {
 
     Topology.of(Set(node1, node2, node3), disconnectedEdges) shouldBe
       Topology(Set(node1, node2, node3), Set(edge1, edge4))
+  }
+
+  /*
+                       A                         B
+
+              (1) --- (2) ---- (5)  |           (5) --- (6)
+                        \           |           /
+                        (3)         |   (3)--(4)
+
+                                ------ +
+
+                                Joined
+
+                    (1) --- (2) ---- (5) --- (6)
+                              \      /
+                              (3)--(4)
+   */
+  "joining topologies" should "be when they are connected" in {
+    val topologyA =
+      Topology(Set(node1, node2, node3, node5), Set(edge1, edge2, edge4))
+    val topologyB =
+      Topology(Set(node3, node4, node5, node6), Set(edge5, edge6, edge3))
+
+    val joined = topologyA.join(topologyB)
+
+    joined.value shouldBe aTopology
+  }
+
+  /*
+                       A                  B
+                  (1) --- (2)    |     (5) --- (6)
+                            \    |     /
+                            (3)  |   (4)
+   */
+  it should "not be possible when they are disconnected" in {
+    val topologyA = Topology(Set(node1, node2, node3), Set(edge1, edge4))
+    val topologyB = Topology(Set(node5, node6, node4), Set(edge3, edge6))
+
+    topologyA.join(topologyB) shouldBe None
   }
 }
